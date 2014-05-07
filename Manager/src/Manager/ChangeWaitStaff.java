@@ -1,6 +1,9 @@
 package Manager;
 
 import javax.swing.*;
+
+import Manager.ChangeHostStaff.ClickListenerAddStaff;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -16,11 +19,16 @@ public class ChangeWaitStaff extends JDialog
     JPanel mainPanel = new JPanel(new GridBagLayout());
 
     JLabel logoLbl = new JLabel();
-    JLabel waiterLbl = new JLabel("Input the Wait Staff's Username:");
+    JLabel waiterLbl = new JLabel("Input the Staff's Username:");
     JTextField waiterFld = new JTextField(15);
     
     JButton addBtn = new JButton("Add Wait Staff"); 
     JButton removeBtn = new JButton("Remove Wait Staff");
+    
+   //DB
+    ActionListener deleteStaffLsnr = new ClickListenerDeleteStaff();
+  //DB STUFF  
+    SQLiteJDBC database = new SQLiteJDBC();
     
     public ChangeWaitStaff ()
     {
@@ -43,11 +51,10 @@ public class ChangeWaitStaff extends JDialog
         c.gridx = 1; c.gridy = 0;
         mainPanel.add(waiterFld, c);
         
-        c.gridx = 0; c.gridy = 1;
-        mainPanel.add(addBtn, c);
 
         c.gridx = 1; c.gridy = 1;
         mainPanel.add(removeBtn, c);
+        removeBtn.addActionListener(deleteStaffLsnr);
         
         add(mainPanel, BorderLayout.CENTER);
     }
@@ -58,5 +65,15 @@ public class ChangeWaitStaff extends JDialog
         logoPanel.add(logoLbl);
         
         add(logoPanel, BorderLayout.NORTH);
+    }
+    
+    //delete button
+    public class ClickListenerDeleteStaff implements ActionListener
+    {
+        public void actionPerformed(ActionEvent event)
+        {
+            database.deleteUser(waiterFld.getText());
+            dispose();
+        }
     }
 }

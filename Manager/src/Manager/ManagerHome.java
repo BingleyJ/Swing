@@ -29,7 +29,13 @@ public class ManagerHome extends JFrame
     
     JPanel mainPanel = new JPanel(new GridBagLayout());
     JPanel logoPanel = new JPanel(); //The logo has its own panel
-
+    
+    //DB STUFF  
+    SQLiteJDBC database = new SQLiteJDBC();
+    
+    
+    
+ 
     JLabel logoLbl = new JLabel();  
     JLabel titleLbl = new JLabel("Manager Login Terminal");
     JLabel usernameLbl = new JLabel("Username: ");
@@ -93,21 +99,25 @@ public class ManagerHome extends JFrame
     {
         public void actionPerformed(ActionEvent event)
         {
-            if ((usernameFld.getText().equals(username)) && 
-               (passwordFld.getText().equals(password)))
-            {
-                //You logged in as the manager
-                ManagerMainMenu menu = new ManagerMainMenu();
-                menu.setVisible(true);
-            }
-            else
-            {
-                //Your username or password was wrong
-                ManagerIncorrectLogin badLogin = new ManagerIncorrectLogin();
-                badLogin.setVisible(true);
-            }
-            usernameFld.setText("");
-            passwordFld.setText("");
+            //DB STUFF
+        	if (database.authenticateManager(usernameFld.getText(), passwordFld.getText()))
+         {
+            //dispose current panel
+        	dispose();
+        	//You logged in as the manager
+             ManagerMainMenu menu = new ManagerMainMenu();
+             	menu.setVisible(true);
+         }
+         else
+         {
+             //Your username or password was wrong
+				             ManagerIncorrectLogin badLogin = new ManagerIncorrectLogin();
+				             badLogin.setVisible(true);
+         }
+         usernameFld.setText("");
+         passwordFld.setText(""); 
+        	
+        	
         }
     }
 }

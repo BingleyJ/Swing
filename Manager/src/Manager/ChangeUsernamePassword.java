@@ -21,19 +21,22 @@ public class ChangeUsernamePassword extends JDialog
     JLabel oldUsernameLbl = new JLabel("Old Username:");
     JLabel newUsernameLbl = new JLabel("New Username:");
     JLabel oldPasswordLbl = new JLabel("Old Password:");
-    JLabel newPasswordLbl = new JLabel("New Password:");    
-    JLabel cfmUsernameLbl = new JLabel("Confirm Username:");
-    JLabel cfmPasswordLbl = new JLabel("Confirm Password:");
-
+    JLabel newPasswordLbl = new JLabel("New Password:"); 
+    JLabel cfmPasswordLbl = new JLabel("Confirm New Password:"); 
+    JLabel newJobLbl = new JLabel("New Job Title:");
+    
     JTextField oldUsernameFld = new JTextField(15);
     JTextField newUsernameFld = new JTextField(15);
-    JTextField cfmUsernameFld = new JTextField(15);
+    JTextField newJobFld = new JTextField(15);
+    
     JPasswordField oldPasswordFld = new JPasswordField(15);
     JPasswordField newPasswordFld = new JPasswordField(15);
     JPasswordField cfmPasswordFld = new JPasswordField(15);
 
     JButton applyBtn = new JButton("Apply"); 
+    
     ActionListener applyLsnr = new ClickListenerApply();
+    SQLiteJDBC database = new SQLiteJDBC();
     
     public ChangeUsernamePassword ()
     {
@@ -82,19 +85,20 @@ public class ChangeUsernamePassword extends JDialog
         mainPanel.add(newPasswordFld, c);
         
         c.gridx = 0; c.gridy = 6;
-        mainPanel.add(cfmUsernameLbl, c);
-        
-        c.gridx = 1; c.gridy = 6;
-        mainPanel.add(cfmUsernameFld, c);
-        
-        c.gridx = 0; c.gridy = 7;
         mainPanel.add(cfmPasswordLbl, c);
         
-        c.gridx = 1; c.gridy = 7;
+        c.gridx = 1; c.gridy = 6;
         mainPanel.add(cfmPasswordFld, c);
+        
+        c.gridx = 0; c.gridy = 7;
+        mainPanel.add(newJobLbl, c);
+        
+        c.gridx = 1; c.gridy = 7;
+        mainPanel.add(newJobFld, c);
         
         c.gridx = 1; c.gridy = 8;
         mainPanel.add(applyBtn, c);
+        applyBtn.addActionListener(applyLsnr);
         
         add(mainPanel, BorderLayout.CENTER);
     }
@@ -102,8 +106,7 @@ public class ChangeUsernamePassword extends JDialog
     private void addLogo()
     {
         logoLbl.setIcon(new ImageIcon("content\\logo.png"));
-        logoPanel.add(logoLbl);
-        
+        logoPanel.add(logoLbl);       
         add(logoPanel, BorderLayout.NORTH);
     }
     
@@ -111,7 +114,11 @@ public class ChangeUsernamePassword extends JDialog
     {
         public void actionPerformed(ActionEvent event)
         {
-            //if (oldUsernameFld.getText().equals(home.username));
+        	if (database.authenticateUser(oldUsernameFld.getText(), oldPasswordFld.getText()));{
+        	database.deleteUser(oldUsernameFld.getText());
+        	database.insertUser(newUsernameFld.getText(), newJobFld.getText(), newPasswordFld.getText());
+        	dispose();
+        	}
         }
     }
 }

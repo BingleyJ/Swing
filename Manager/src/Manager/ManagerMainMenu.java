@@ -20,8 +20,8 @@ public class ManagerMainMenu extends JDialog
     JPanel mainPanel = new JPanel();
 
     JLabel logoLbl = new JLabel();
-    JButton hostStaff = new JButton("Add/Remove Host Staff");
-    JButton waitStaff = new JButton("Add/Remove Wait Staff");
+    JButton hostStaff = new JButton("Add Staff");
+    JButton waitStaff = new JButton("Remove Staff");
     JButton changeUsername = new JButton("Change Username/Password");
     JButton query = new JButton("Query the Database");
     
@@ -73,6 +73,7 @@ public class ManagerMainMenu extends JDialog
         add(logoPanel, BorderLayout.NORTH);
     }
 
+    	//add staff
     public class ClickListenerHostStaff implements ActionListener
     {
         public void actionPerformed(ActionEvent event)
@@ -82,6 +83,7 @@ public class ManagerMainMenu extends JDialog
         }
     }
     
+    //remove staff
     public class ClickListenerWaitStaff implements ActionListener
     {
         public void actionPerformed(ActionEvent event)
