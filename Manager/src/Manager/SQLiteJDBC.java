@@ -24,10 +24,10 @@ import java.sql.*;
 public class SQLiteJDBC {
 	public SQLiteJDBC() {
 
-		// ONLY run if DB doesn't exist
-		// /////////////////// connectUsertable();
+		// ONLY run if DB doesn't exist. These three functions create the tables
 		// createUsertable();
 		// createMenutable();
+		// createOrdertable();
 		// ///////////////////
 
 		// insertMenuitem("Drink" , "Blood", "6.66");
@@ -38,56 +38,18 @@ public class SQLiteJDBC {
 		// insertUser("Paul", "Manager", "a");
 		// System.out.println(authenticateManager("Jay", "Poop"));
 		// System.out.println(authenticateUser("Jay", "Poop"));
-		printUserlist();
-
+		   printuserlistConsole();
 		// deleteUser("Jay", "Poop");
+		
+		//insertOrder(1,"fries");
+		//deleteOrder(1);
+		//printOrderslist();
 	}
 
-	public void insertUser(String inName, String inJob, String inPassword) {
-		Connection c = null;
-		Statement stmt = null;
-		try {
-			Class.forName("org.sqlite.JDBC");
-			c = DriverManager.getConnection("jdbc:sqlite:Restuarant.db");
-			c.setAutoCommit(false);
-			System.out.println("Opened database successfully");
-			stmt = c.createStatement();
-			String sql = "INSERT INTO USERS (NAME,JOB,PASSWORD) " + "VALUES ('"
-					+ inName + "', '" + inJob + "', '" + inPassword + "');";
-			stmt.executeUpdate(sql);
-			stmt.close();
-			c.commit();
-			c.close();
-		} catch (Exception e) {
-			System.err.println(e.getClass().getName() + e.getMessage());
-			System.exit(0);
+	
+	
 
-		}
-		System.out.println("Records created successfully");
-	}
-
-	public static void deleteUser(String inName) {
-		Connection c = null;
-		Statement stmt = null;
-
-		try {
-			Class.forName("org.sqlite.JDBC");
-			c = DriverManager.getConnection("jdbc:sqlite:Restuarant.db");
-			c.setAutoCommit(false);
-			System.out.println("Opened database successfully");
-			stmt = c.createStatement();
-			String sql = "DELETE from USERS WHERE NAME='" + inName + "'";
-			stmt.executeUpdate(sql);
-			c.commit();
-			stmt.close();
-			c.close();
-			System.out.println("Database closed.");
-		} catch (Exception e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
-			System.exit(0);
-		}
-	}
-
+	//AUTHENTICATE FUNCTIONS---------------------
 	public static boolean authenticateManager(String inName, String inPassword) {
 		Connection c = null;
 		Statement stmt = null;
@@ -118,44 +80,7 @@ public class SQLiteJDBC {
 		}
 		return authenticated;
 	}
-	//I chose to just return 3 strings in an array here. DB
 	
-	
-	
-	
-	public static String[] nameSearch(String inName) {
-		String[] userInfo = new String[5];
-
-		Connection c = null;
-		Statement stmt = null;
-		try {
-			Class.forName("org.sqlite.JDBC");
-			c = DriverManager.getConnection("jdbc:sqlite:Restuarant.db");
-			c.setAutoCommit(false);
-			System.out.println("Opened database successfully");
-			stmt = c.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM USERS;");
-			while (rs.next()) {					
-				String name = rs.getString("name");
-				String job = rs.getString("job");
-				String password = rs.getString("password");
-				if (name.equals(inName)) {
-				userInfo[0] = (name);
-			    userInfo[1] = (job);
-				userInfo[2] = (password);
-					rs.close();
-					stmt.close();
-					c.close();
-					
-				}
-			}
-		} catch (Exception e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
-			System.exit(0);
-		}
-		return userInfo;
-	}
-
 	public static boolean authenticateUser(String inName, String inPassword) {
 		Connection c = null;
 		Statement stmt = null;
@@ -183,8 +108,11 @@ public class SQLiteJDBC {
 		}
 		return authenticated;
 	}
-
-	public static void printUserlist() {
+	
+	//SEARCH FUMCTIONS RETURN StringArray[2] 
+	//I chose to just return 3 strings in an array here. DB
+	public static String[] jobSearch(String inJob) {
+		String[] userInfo = new String[5];
 		Connection c = null;
 		Statement stmt = null;
 		try {
@@ -192,7 +120,189 @@ public class SQLiteJDBC {
 			c = DriverManager.getConnection("jdbc:sqlite:Restuarant.db");
 			c.setAutoCommit(false);
 			System.out.println("Opened database successfully");
+			stmt = c.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM USERS;");
+			while (rs.next()) {					
+				String name = rs.getString("name");
+				String job = rs.getString("job");
+				String password = rs.getString("password");
+				if (job.equals(inJob)) {
+				userInfo[0] = (name);
+			    userInfo[1] = (job);
+				userInfo[2] = (password);
+					rs.close();
+					stmt.close();
+					c.close();
+				}
+			}
+		} catch (Exception e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			System.exit(0);
+		}
+		return userInfo;
+	}
+	
+	public static String[] nameSearch(String inName) {
+		String[] userInfo = new String[5];
+		Connection c = null;
+		Statement stmt = null;
+		try {
+			Class.forName("org.sqlite.JDBC");
+			c = DriverManager.getConnection("jdbc:sqlite:Restuarant.db");
+			c.setAutoCommit(false);
+			System.out.println("Opened database successfully");
+			stmt = c.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM USERS;");
+			while (rs.next()) {					
+				String name = rs.getString("name");
+				String job = rs.getString("job");
+				String password = rs.getString("password");
+				if (name.equals(inName)) {
+				userInfo[0] = (name);
+			    userInfo[1] = (job);
+				userInfo[2] = (password);
+					rs.close();
+					stmt.close();
+					c.close();
+				}
+			}
+		} catch (Exception e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			System.exit(0);
+		}
+		return userInfo;
+	}
 
+	
+	//ORDERS TABLE FUNCTIONS----------------------
+	public static void createOrdertable() {
+		{
+			Connection c = null;
+			Statement stmt = null;
+			try {
+				Class.forName("org.sqlite.JDBC");
+				c = DriverManager.getConnection("jdbc:sqlite:Restuarant.db");
+				System.out.println("Opened database successfully");
+				stmt = c.createStatement();
+				String sql = "CREATE TABLE ORDERS "
+						+ "(TBLNUM         INT    NOT NULL, "
+						+ " ORDERSTR       TEXT   NOT NULL)";
+				stmt.executeUpdate(sql);
+				stmt.close();
+				c.close();
+			} catch (Exception e) {
+				System.err.println(e.getClass().getName() + ": "
+						+ e.getMessage());
+				System.exit(0);
+			}
+			System.out.println("Table created successfully");
+		}
+	}
+	
+	public static void printorderslistConsole() {
+		Connection c = null;
+		Statement stmt = null;
+		try {
+			Class.forName("org.sqlite.JDBC");
+			c = DriverManager.getConnection("jdbc:sqlite:Restuarant.db");
+			c.setAutoCommit(false);
+			System.out.println("Opened database successfully");
+			stmt = c.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM ORDERS;");
+			while (rs.next()) {
+				int name = rs.getInt("tblnum");
+				String order = rs.getString("orderstr");
+				System.out.println("TABLE = " + name);
+				System.out.println("ORDER = " + order);
+				System.out.println("---------------------");
+			}
+			rs.close();
+			stmt.close();
+			c.close();
+		} catch (Exception e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			System.exit(0);
+		}
+		System.out.println("Operation done successfully");
+	}
+	
+	public void insertOrder(int inTable, String inOrder) {
+		Connection c = null;
+		Statement stmt = null;
+		try {
+			Class.forName("org.sqlite.JDBC");
+			c = DriverManager.getConnection("jdbc:sqlite:Restuarant.db");
+			c.setAutoCommit(false);
+			System.out.println("Opened database successfully");
+			stmt = c.createStatement();
+			String sql = "INSERT INTO ORDERS (TBLNUM, ORDERSTR) " + "VALUES ('"
+					+ inTable + "', '" + inOrder +  "');";
+			stmt.executeUpdate(sql);
+			stmt.close();
+			c.commit();
+			c.close();
+		} catch (Exception e) {
+			System.err.println(e.getClass().getName() + e.getMessage());
+			System.exit(0);
+		}
+		System.out.println("Records created successfully");
+	}
+	
+	
+	public static void deleteOrder(int inTable) {
+		Connection c = null;
+		Statement stmt = null;
+		try {
+			Class.forName("org.sqlite.JDBC");
+			c = DriverManager.getConnection("jdbc:sqlite:Restuarant.db");
+			c.setAutoCommit(false);
+			System.out.println("Opened database successfully");
+			stmt = c.createStatement();
+			String sql = "DELETE from ORDERS WHERE TBLNUM='" + inTable + "'";
+			stmt.executeUpdate(sql);
+			c.commit();
+			stmt.close();
+			c.close();
+			System.out.println("Database closed.");
+		} catch (Exception e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			System.exit(0);
+		}
+	}
+	//USERS TABLE FUCTIONS-----------------------
+	public static void createUsertable() {
+		{
+			Connection c = null;
+			Statement stmt = null;
+			try {
+				Class.forName("org.sqlite.JDBC");
+				c = DriverManager.getConnection("jdbc:sqlite:Restuarant.db");
+				System.out.println("Opened database successfully");
+				stmt = c.createStatement();
+				String sql = "CREATE TABLE USERS "
+						+ "(NAME           TEXT    NOT NULL, "
+						+ " JOB            TEXT    NOT NULL, "
+						+ " PASSWORD       TEXT    NOT NULL)";
+				stmt.executeUpdate(sql);
+				stmt.close();
+				c.close();
+			} catch (Exception e) {
+				System.err.println(e.getClass().getName() + ": "
+						+ e.getMessage());
+				System.exit(0);
+			}
+			System.out.println("Table created successfully");
+		}
+	}
+
+	public static void printuserlistConsole() {
+		Connection c = null;
+		Statement stmt = null;
+		try {
+			Class.forName("org.sqlite.JDBC");
+			c = DriverManager.getConnection("jdbc:sqlite:Restuarant.db");
+			c.setAutoCommit(false);
+			System.out.println("Opened database successfully");
 			stmt = c.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM USERS;");
 			while (rs.next()) {
@@ -214,45 +324,51 @@ public class SQLiteJDBC {
 		System.out.println("Operation done successfully");
 	}
 
-	public static void connectUsertable() {
+	public void insertUser(String inName, String inJob, String inPassword) {
 		Connection c = null;
+		Statement stmt = null;
 		try {
 			Class.forName("org.sqlite.JDBC");
 			c = DriverManager.getConnection("jdbc:sqlite:Restuarant.db");
+			c.setAutoCommit(false);
+			System.out.println("Opened database successfully");
+			stmt = c.createStatement();
+			String sql = "INSERT INTO USERS (NAME,JOB,PASSWORD) " + "VALUES ('"
+					+ inName + "', '" + inJob + "', '" + inPassword + "');";
+			stmt.executeUpdate(sql);
+			stmt.close();
+			c.commit();
+			c.close();
+		} catch (Exception e) {
+			System.err.println(e.getClass().getName() + e.getMessage());
+			System.exit(0);
+		}
+		System.out.println("Records created successfully");
+	}
+	
+	public static void deleteUser(String inName) {
+		Connection c = null;
+		Statement stmt = null;
+		try {
+			Class.forName("org.sqlite.JDBC");
+			c = DriverManager.getConnection("jdbc:sqlite:Restuarant.db");
+			c.setAutoCommit(false);
+			System.out.println("Opened database successfully");
+			stmt = c.createStatement();
+			String sql = "DELETE from USERS WHERE NAME='" + inName + "'";
+			stmt.executeUpdate(sql);
+			c.commit();
+			stmt.close();
+			c.close();
+			System.out.println("Database closed.");
 		} catch (Exception e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			System.exit(0);
 		}
-		System.out.println("Opened database successfully");
 	}
-
-	public static void createUsertable() {
-		{
-			Connection c = null;
-			Statement stmt = null;
-			try {
-				Class.forName("org.sqlite.JDBC");
-				c = DriverManager.getConnection("jdbc:sqlite:Restuarant.db");
-				System.out.println("Opened database successfully");
-
-				stmt = c.createStatement();
-				String sql = "CREATE TABLE USERS "
-						+ "(NAME           TEXT    NOT NULL, "
-						+ " JOB            TEXT    NOT NULL, "
-						+ " PASSWORD       TEXT    NOT NULL)";
-				stmt.executeUpdate(sql);
-				stmt.close();
-				c.close();
-			} catch (Exception e) {
-				System.err.println(e.getClass().getName() + ": "
-						+ e.getMessage());
-				System.exit(0);
-			}
-			System.out.println("Table created successfully");
-		}
-	}
-
+	
 	// Price needs to be recast to be used in math functions
+	//MENU TABLE FUNCTIONS ----------------------
 	public static void createMenutable() {
 		{
 			Connection c = null;
@@ -261,7 +377,6 @@ public class SQLiteJDBC {
 				Class.forName("org.sqlite.JDBC");
 				c = DriverManager.getConnection("jdbc:sqlite:Restuarant.db");
 				System.out.println("Opened database successfully");
-
 				stmt = c.createStatement();
 				String sql = "CREATE TABLE MENU "
 						+ "(CATEGORY        TEXT    NOT NULL, "
@@ -279,7 +394,7 @@ public class SQLiteJDBC {
 		}
 	}
 
-	public static void printMenu() {
+	public static void printmenuConsole() {
 		Connection c = null;
 		Statement stmt = null;
 		try {
@@ -287,7 +402,6 @@ public class SQLiteJDBC {
 			c = DriverManager.getConnection("jdbc:sqlite:Restuarant.db");
 			c.setAutoCommit(false);
 			System.out.println("Opened database successfully");
-
 			stmt = c.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM MENU;");
 			while (rs.next()) {
@@ -309,7 +423,7 @@ public class SQLiteJDBC {
 		System.out.println("Operation done successfully");
 	}
 
-	public static void printMenucategory(String inCategory) {
+	public static void printmenucategoryConsole(String inCategory) {
 		Connection c = null;
 		Statement stmt = null;
 		try {
@@ -317,7 +431,6 @@ public class SQLiteJDBC {
 			c = DriverManager.getConnection("jdbc:sqlite:Restuarant.db");
 			c.setAutoCommit(false);
 			System.out.println("Opened database successfully");
-
 			stmt = c.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM MENU;");
 			while (rs.next()) {
@@ -368,7 +481,6 @@ public class SQLiteJDBC {
 	public static void deleteMenuitem(String inCategory, String inName) {
 		Connection c = null;
 		Statement stmt = null;
-
 		try {
 			Class.forName("org.sqlite.JDBC");
 			c = DriverManager.getConnection("jdbc:sqlite:Restuarant.db");
@@ -386,6 +498,19 @@ public class SQLiteJDBC {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			System.exit(0);
 		}
+	}
+
+ //////SAMPLE CONNECT FUNCTION
+	public static void connectUsertable() {
+		Connection c = null;
+		try {
+			Class.forName("org.sqlite.JDBC");
+			c = DriverManager.getConnection("jdbc:sqlite:Restuarant.db");
+		} catch (Exception e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			System.exit(0);
+		}
+		System.out.println("Opened database successfully");
 	}
 
 }

@@ -33,6 +33,8 @@ public class QueryDB extends JDialog
     JButton jobsearchBtn = new JButton("Search"); 
 
     ActionListener namesearchLsnr = new NameSearchLsnr();
+    ActionListener jobsearchLsnr = new JobSearchLsnr();
+
     
     
 
@@ -81,7 +83,9 @@ public class QueryDB extends JDialog
         
         c.gridx = 2; c.gridy = 1;
         mainPanel.add(jobsearchBtn, c);
-        
+        jobsearchBtn.addActionListener(jobsearchLsnr);
+
+  
         add(mainPanel, BorderLayout.CENTER);
     }
     
@@ -91,6 +95,17 @@ public class QueryDB extends JDialog
         {
         	NameSearch search = new NameSearch(namesearchFld.getText());
             search.setVisible(true);
+            dispose();
+        }
+    }
+    
+    public class JobSearchLsnr implements ActionListener
+    {
+        public void actionPerformed(ActionEvent event)
+        {
+        	JobSearch search = new JobSearch(jobsearchFld.getText());
+            search.setVisible(true);
+            dispose();
         }
     }
     

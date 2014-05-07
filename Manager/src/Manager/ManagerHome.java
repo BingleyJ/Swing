@@ -34,8 +34,6 @@ public class ManagerHome extends JFrame
     SQLiteJDBC database = new SQLiteJDBC();
     
     
-    
- 
     JLabel logoLbl = new JLabel();  
     JLabel titleLbl = new JLabel("Manager Login Terminal");
     JLabel usernameLbl = new JLabel("Username: ");

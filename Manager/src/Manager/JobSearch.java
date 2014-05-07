@@ -7,7 +7,7 @@ import org.sqlite.SQLite;
 import java.awt.*;
 import java.awt.event.*;
 
-public class NameSearch extends JDialog 
+public class JobSearch extends JDialog 
 {
     //Create components
     GridBagConstraints c = new GridBagConstraints();
@@ -32,9 +32,10 @@ public class NameSearch extends JDialog
     
     
     
-    public NameSearch (String inName)
+    public JobSearch (String inJob)
     {
-    	userInfo = database.nameSearch(inName);
+    	
+    	userInfo = database.jobSearch(inJob);
         nameLbl.setText(userInfo[0]);
     	jobLbl.setText(userInfo[1]);
     	passwordLbl.setText(userInfo[2]);  
